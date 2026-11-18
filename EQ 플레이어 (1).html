@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EQ 플레이어</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#eceef3;--pn:#fff;--tx:#141821;--sub:#677084;--ac:#b7700a;--on:#fff;--ln:#d5d9e2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1118;--pn:#161c27;--tx:#e8ecf3;--sub:#8591a5;--ac:#f2b544;--on:#18120a;--ln:#2a3342}}
+:root[data-theme="dark"]{--bg:#0d1118;--pn:#161c27;--tx:#e8ecf3;--sub:#8591a5;--ac:#f2b544;--on:#18120a;--ln:#2a3342}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 14px/1.4 "IBM Plex Sans KR",system-ui,-apple-system,"Noto Sans KR",sans-serif;-webkit-tap-highlight-color:transparent}
+.w{max-width:520px;margin:0 auto;padding:22px 16px 30px;display:flex;flex-direction:column;gap:24px}
+.np{display:flex;flex-direction:column;gap:16px}
+.cov{width:min(100%,280px);aspect-ratio:1;align-self:center;border-radius:20px;background:var(--pn) center/cover no-repeat;display:grid;place-items:center;color:var(--ln);box-shadow:0 0 0 1px var(--ln)}
+.cov.has svg{display:none}
+.ar{color:var(--sub);font-size:14px;margin-top:-10px;min-height:1em}
+#t{font-size:23px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all;margin:0}
+.bd{border:1px solid var(--ln);border-radius:6px;padding:1px 8px;font-size:11px;color:var(--sub);width:max-content}
+.tm{display:flex;justify-content:space-between;color:var(--sub);font-size:12px;font-variant-numeric:tabular-nums;margin-top:-6px}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;width:100%;margin:0;height:22px;accent-color:var(--ac)}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--ln);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ac);margin-top:-5.5px}
+input[type=range]::-moz-range-track{height:3px;background:var(--ln);border-radius:2px}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--ac)}
+.tr{display:flex;justify-content:space-between;align-items:center}
+.ib{background:none;border:0;color:var(--sub);width:46px;height:46px;display:grid;place-items:center;border-radius:50%;padding:0}
+.ib.on{color:var(--ac)}
+.ib:focus-visible,.ch:focus-visible,.sm:focus-visible,.pp:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.tr .nx{color:var(--tx)}
+.pp{width:66px;height:66px;border-radius:50%;border:0;background:var(--ac);color:var(--on);display:grid;place-items:center;padding:0}
+.vl{display:flex;align-items:center;gap:10px;color:var(--sub)}
+.eqp{background:var(--pn);border-radius:22px;padding:16px 10px 14px}
+.hd{display:flex;justify-content:space-between;align-items:baseline;padding:0 6px;margin-bottom:10px}
+.hd b{font-size:15px;font-weight:600}
+.hd span{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums}
+.chs{display:flex;gap:6px;overflow-x:auto;padding:0 6px 12px;scrollbar-width:none}
+.chs::-webkit-scrollbar{display:none}
+.ch{flex:none;background:none;border:1px solid var(--ln);color:var(--sub);border-radius:99px;padding:5px 13px;font:inherit;font-size:12px}
+.ch.on{background:var(--ac);border-color:var(--ac);color:var(--on);font-weight:500}
+[hidden]{display:none!important}
+.s3>span:first-child{min-width:62px}.s3 span:last-child{width:52px}
+.nt{font-size:12px;color:var(--sub);padding:12px 6px 0;line-height:1.5}
+.pc{display:flex;gap:8px;padding:2px 6px}.pc select{background:var(--bg);color:var(--tx);appearance:auto}
+#pm .pr>span:first-child{min-width:44px}#pm .pr span:last-child{width:62px}
+.sr{display:flex;gap:6px;padding:0 6px 12px}.sr[hidden]{display:none}.sr input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--ln);border-radius:99px;padding:6px 14px;color:var(--tx);font:inherit;font-size:13px}
+#v{display:block;width:100%;height:120px}
+.fz{position:relative;display:grid;grid-template-columns:repeat(15,1fr);margin-top:4px}
+.fz::before{content:"";position:absolute;left:0;right:0;top:75px;height:1px;background:var(--ln)}
+.f{-webkit-appearance:none;appearance:none;writing-mode:vertical-lr;direction:rtl;width:100%!important;height:150px!important;margin:0;position:relative;z-index:1}
+.f::-webkit-slider-runnable-track{width:3px!important;height:auto!important;background:var(--ln);border-radius:2px}
+.f::-webkit-slider-thumb{width:20px!important;height:9px!important;border-radius:3px;margin:0 0 0 -8.5px!important;background:var(--tx)}
+.f::-moz-range-track{width:3px;background:var(--ln);border-radius:2px}
+.f::-moz-range-thumb{width:20px;height:9px;border-radius:3px;background:var(--tx)}
+.f:active::-webkit-slider-thumb{background:var(--ac)}
+.lb{display:grid;grid-template-columns:repeat(15,1fr);font-size:9px;color:var(--sub);text-align:center;font-variant-numeric:tabular-nums}
+.pr{display:flex;align-items:center;gap:10px;padding:14px 6px 0;color:var(--sub);font-size:12px}
+.pr span:last-child{width:42px;text-align:right;font-variant-numeric:tabular-nums}
+.ph{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.ph b{font-size:15px;font-weight:600;flex:1}
+.ph b small{font-weight:400;color:var(--sub);margin-left:6px;font-size:12px}
+.sm{background:none;border:1px solid var(--ln);color:var(--tx);border-radius:99px;padding:6px 14px;font:inherit;font-size:12px}
+#pl{max-height:300px;overflow-y:auto}
+.i{padding:12px 4px 12px 12px;border-bottom:1px solid var(--ln);font-size:14px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.i.on{color:var(--ac);font-weight:500;box-shadow:inset 3px 0 var(--ac)}
+.em{color:var(--sub);padding:22px 4px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="w">
+
+<section class="np">
+<div class="cov" id="cover"><svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+<div class="bd" id="fm">대기 중</div>
+<h1 id="t">음악을 추가하세요</h1>
+<div class="ar" id="ar"></div>
+<input type="range" id="sk" min="0" max="1000" value="0" aria-label="재생 위치">
+<div class="tm"><span id="cu">0:00</span><span id="du">0:00</span></div>
+<div class="tr">
+<button class="ib" id="sh" aria-label="셔플"></button>
+<button class="ib nx" id="pv" aria-label="이전"></button>
+<button class="pp" id="pp" aria-label="재생"></button>
+<button class="ib nx" id="nx" aria-label="다음"></button>
+<button class="ib" id="rp" aria-label="반복"></button>
+</div>
+<div class="vl"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9zM16 8a5 5 0 0 1 0 8z"/></svg><input type="range" id="vo" min="0" max="1" step="0.01" value="1" aria-label="볼륨"></div>
+</section>
+
+<section class="eqp">
+<div class="hd"><b>이퀄라이저</b><span id="eqh">Flat</span></div>
+<div class="chs" id="md"><button class="ch on" data-m="g">그래프</button><button class="ch" data-m="p">파라메트릭</button></div>
+<div class="chs" id="ps"></div>
+<div class="sr" id="sr" hidden><input id="nm" maxlength="14" placeholder="프리셋 이름"><button class="sm" id="ok">저장</button><button class="sm" id="no">취소</button></div>
+<canvas id="v"></canvas>
+<div id="pm" hidden>
+<div class="chs" id="pps" style="padding-top:10px"></div>
+<div class="chs" id="pb" style="padding-top:0"></div>
+<div class="pc"><select class="sm" id="pt"><option value="peaking">피킹</option><option value="lowshelf">로우쉘프</option><option value="highshelf">하이쉘프</option></select><button class="sm" id="pz">전체 초기화</button></div>
+<label class="pr"><span>주파수</span><input type="range" id="pf" min="0" max="1000" value="500"><span id="pfv"></span></label>
+<label class="pr"><span>게인</span><input type="range" id="pg" min="-12" max="12" step="0.5" value="0"><span id="pgv"></span></label>
+<label class="pr"><span>Q</span><input type="range" id="pq" min="0.3" max="10" step="0.1" value="1"><span id="pqv"></span></label>
+</div>
+<div class="fz" id="eq"></div>
+<div class="lb" id="lb"></div>
+<div class="pr"><span>프리앰프</span><input type="range" id="pre" min="-12" max="12" step="0.5" value="0" aria-label="프리앰프"><span id="pv2">0 dB</span></div>
+</section>
+
+<section class="eqp">
+<div class="hd"><b>3D 사운드</b><span id="s3h">꺼짐</span></div>
+<div class="chs" id="s3p"></div>
+<label class="pr s3" style="padding-top:2px"><span>와이드</span><input type="range" id="s3w" min="0" max="100" value="0"><span id="s3wv"></span></label>
+<label class="pr s3"><span>8D 회전</span><input type="range" id="s3o" min="0" max="100" value="0"><span id="s3ov"></span></label>
+<label class="pr s3"><span>회전 속도</span><input type="range" id="s3t" min="2" max="20" step="0.5" value="8"><span id="s3tv"></span></label>
+<label class="pr s3"><span>공간감</span><input type="range" id="s3r" min="0" max="100" value="0"><span id="s3rv"></span></label>
+<div class="nt">헤드폰·이어폰에서 효과가 가장 커요. 돌비 애트모스 포맷 자체는 아니고, 스테레오를 가공한 가상 입체음향이에요.</div>
+</section>
+
+<section>
+<div class="ph"><b>재생목록<small id="cn">0곡</small></b><button class="sm" id="rf" hidden>저장 폴더</button><button class="sm" id="fd">폴더</button><button class="sm" id="ad">파일</button></div>
+<input type="file" id="fi" multiple accept="audio/*,.mp3,.m4a,.flac,.wav,.opus,.ogg,.oga,.aac,.webm,.aiff" hidden>
+<input type="file" id="fo" webkitdirectory multiple hidden>
+<div id="pl"></div>
+</section>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+<script>
+const F=[25,40,63,100,160,250,400,630,1000,1600,2500,4000,6300,10000,16000];
+const PS={"Flat":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"베이스 부스트":[6,6,5,4,2,0,0,0,0,0,0,0,0,0,0],"보컬":[-2,-2,-1,0,1,2,3,3,3,2,1,0,-1,-1,-2],"트레블":[0,0,0,0,0,0,0,0,1,2,3,4,5,5,5],"라우드니스":[5,4,3,1,0,-1,-1,0,0,1,2,3,4,4,3],"V자":[5,4,3,1,-1,-3,-3,-2,0,1,2,3,4,5,5]};
+const EX=/\.(mp3|m4a|flac|wav|opus|ogg|oga|aac|webm|aiff?)$/i;
+const $=id=>document.getElementById(id),a=new Audio();a.preload="metadata";
+let ctx,pre,fl=[],pf=[],md="g",P=[],an,T=[],cur=-1,sh=false,rp=0,g=PS["Flat"].slice(),C={};
+try{const s=JSON.parse(localStorage.getItem("eq15"));if(Array.isArray(s)&&s.length==15)g=s}catch(e){}
+const fq=f=>f>=1000?(f/1000)+"k":f;
+const ic=(p,s,z)=>`<svg viewBox="0 0 24 24" width="${z||22}" height="${z||22}" ${s?'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"':'fill="currentColor"'}>${p}</svg>`;
+const I={pv:ic('<path d="M6 6h2v12H6zM20 6v12L9.5 12z"/>'),nx:ic('<path d="M16 6h2v12h-2zM4 6v12l10.5-6z"/>'),pl:ic('<path d="M8 5v14l11-7z"/>',0,30),pa:ic('<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>',0,30),sh:ic('<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',1),rp:ic('<path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/>',1),r1:ic('<path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/><path d="M11 10l1-1v6" stroke-width="1.6"/>',1)};
+$("pv").innerHTML=I.pv;$("nx").innerHTML=I.nx;$("pp").innerHTML=I.pl;$("sh").innerHTML=I.sh;$("rp").innerHTML=I.rp;
+
+F.forEach((f,i)=>{const r=document.createElement("input");r.type="range";r.className="f";r.min=-12;r.max=12;r.step=.5;r.value=g[i];r.dataset.i=i;r.setAttribute("aria-label",fq(f)+"Hz");$("eq").appendChild(r);const l=document.createElement("span");l.textContent=fq(f);$("lb").appendChild(l)});
+let CP={};try{CP=JSON.parse(localStorage.getItem("eq15p"))||{}}catch(e){}
+const AL=()=>({...PS,...CP}),svp=()=>{try{localStorage.setItem("eq15p",JSON.stringify(CP))}catch(e){}};
+function chips(){const p=$("ps"),al=AL();p.innerHTML="";Object.keys(al).forEach(k=>{const b=document.createElement("button");b.className="ch";b.dataset.k=k;b.textContent=k;b.onclick=()=>{g=al[k].slice();show()};if(k in CP){const d=document.createElement("span");d.textContent="×";d.setAttribute("aria-label",k+" 삭제");d.style.cssText="margin-left:8px;padding:0 4px;opacity:.7";d.onclick=e=>{e.stopPropagation();delete CP[k];svp();chips();show()};b.appendChild(d)}p.appendChild(b)});const s=document.createElement("button");s.className="ch";s.textContent="+ 저장";s.onclick=()=>{$("sr").hidden=false;$("nm").focus()};p.appendChild(s)}
+$("ok").onclick=()=>{const n=$("nm").value.trim();if(!n||n in PS){$("nm").value="";$("nm").placeholder="다른 이름을 입력하세요";return $("nm").focus()}if(md=="p"){PP[n]=JSON.parse(JSON.stringify(P));spp();pchips();pshow()}else{CP[n]=g.slice();svp();chips();show()}$("nm").value="";$("nm").placeholder="프리셋 이름";$("sr").hidden=true};
+$("no").onclick=()=>{$("sr").hidden=true};
+$("nm").onkeydown=e=>{if(e.key=="Enter")$("ok").click()};
+chips();
+function show(i){const fs=document.querySelectorAll(".f");g.forEach((v,j)=>{fs[j].value=v;if(fl[j])fl[j].gain.value=md=="g"?v:0});
+let m="사용자 설정";document.querySelectorAll("#ps .ch[data-k]").forEach(c=>{const on=AL()[c.dataset.k].every((v,j)=>v==g[j]);c.classList.toggle("on",on);if(on)m=c.dataset.k});
+$("eqh").textContent=i!=null?fq(F[i])+"Hz  "+(g[i]>0?"+":"")+g[i].toFixed(1)+" dB":m;
+try{localStorage.setItem("eq15",JSON.stringify(g))}catch(e){}}
+$("eq").oninput=e=>{const i=+e.target.dataset.i;g[i]=+e.target.value;show(i)};
+$("eq").ondblclick=e=>{if(e.target.dataset.i){g[+e.target.dataset.i]=0;show()}};
+$("pre").oninput=()=>{const v=+$("pre").value;$("pv2").textContent=v+" dB";if(pre)pre.gain.value=Math.pow(10,v/20)};
+show();
+
+function init(){if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();const s=ctx.createMediaElementSource(a);pre=ctx.createGain();let n=s.connect(pre);fl=F.map((f,i)=>{const b=ctx.createBiquadFilter();b.type="peaking";b.frequency.value=f;b.Q.value=1.4;b.gain.value=g[i];n=n.connect(b);return b});pf=P.map(()=>{const q=ctx.createBiquadFilter();n=n.connect(q);return q});fl.forEach((b,i)=>b.gain.value=md=="g"?g[i]:0);applyP();an=ctx.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.82;n=build3d(n);n.connect(an);an.connect(ctx.destination);$("pre").oninput();ap3()}
+
+const cv=$("v"),x=cv.getContext("2d"),D=new Uint8Array(1024);let W=0,H=0;
+function col(){const s=getComputedStyle(document.documentElement);C={ac:s.getPropertyValue("--ac").trim(),ln:s.getPropertyValue("--ln").trim()}}
+col();matchMedia("(prefers-color-scheme: dark)").onchange=col;
+new ResizeObserver(()=>{const r=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;cv.width=W*r;cv.height=H*r;x.setTransform(r,0,0,r,0,0)}).observe(cv);
+const pk=(f0,G,f)=>{const A=10**(G/40),w0=2*Math.PI*f0/48000,al=Math.sin(w0)/2.8,c=Math.cos(w0),w=2*Math.PI*f/48000,cw=Math.cos(w),c2=Math.cos(2*w);const b0=1+al*A,b1=-2*c,b2=1-al*A,a0=1+al/A,a1=-2*c,a2=1-al/A;const n=b0*b0+b1*b1+b2*b2+2*(b0*b1+b1*b2)*cw+2*b0*b2*c2,d=a0*a0+a1*a1+a2*a2+2*(a0*a1+a1*a2)*cw+2*a0*a2*c2;return 10*Math.log10(n/d)};
+const fx=p=>25*Math.pow(640,(p/W*15-.5)/14),yy=d=>H/2-d/12*(H/2-8);
+(function loop(){requestAnimationFrame(loop);if(!W)return;x.clearRect(0,0,W,H);
+x.lineWidth=1;x.strokeStyle=C.ln;x.setLineDash([3,4]);[-6,6].forEach(d=>{x.beginPath();x.moveTo(0,yy(d));x.lineTo(W,yy(d));x.stroke()});x.setLineDash([]);x.beginPath();x.moveTo(0,H/2);x.lineTo(W,H/2);x.stroke();
+if(an&&!a.paused){an.getByteFrequencyData(D);x.fillStyle=C.ac;x.globalAlpha=.2;const sr=ctx.sampleRate;for(let p=0;p<W;p+=4){const v=D[Math.min(1023,Math.round(fx(p+2)*2048/sr))]/255;x.fillRect(p,H-v*(H-8),3,v*(H-8))}x.globalAlpha=1}
+x.beginPath();for(let p=0;p<=W;p+=3){const f=fx(p);let d=md=="p"?P.reduce((s,b)=>s+bq(b.t,b.f,b.g,b.q,f),0):F.reduce((s,f0,i)=>s+pk(f0,g[i],f),0);d=Math.max(-14,Math.min(14,d));p?x.lineTo(p,yy(d)):x.moveTo(p,yy(d))}
+x.strokeStyle=C.ac;x.lineWidth=2;x.stroke();x.lineTo(W,H/2);x.lineTo(0,H/2);x.fillStyle=C.ac;x.globalAlpha=.14;x.fill();x.globalAlpha=1;
+x.fillStyle=C.ac;if(md=="p")P.forEach((b,i)=>{x.beginPath();x.arc(bx(b.f),yy(b.g),i==sel?7:4.5,0,7);x.fill();if(i==sel){x.strokeStyle=C.ac;x.lineWidth=2;x.globalAlpha=.4;x.beginPath();x.arc(bx(b.f),yy(b.g),12,0,7);x.stroke();x.globalAlpha=1}});else for(let i=0;i<15;i++){x.beginPath();x.arc((i+.5)/15*W,yy(g[i]),3,0,7);x.fill()}
+})();
+
+const tm=s=>isNaN(s)||!isFinite(s)?"0:00":Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+function list(){const p=$("pl");p.innerHTML="";if(!T.length)p.innerHTML='<div class="em">파일이나 폴더를 추가하면 여기에 표시돼요.</div>';T.forEach((t,i)=>{const d=document.createElement("div");d.className="i"+(i==cur?" on":"");d.textContent=t.name;d.onclick=()=>play(i);p.appendChild(d)});$("cn").textContent=T.length+"곡"}
+function play(i){if(i<0||i>=T.length)return;init();if(ctx.state=="suspended")ctx.resume();cur=i;a.src=T[i].url;a.play().catch(()=>{$("t").textContent="재생할 수 없어요. 이 브라우저가 지원하지 않는 포맷이에요."});$("t").textContent=T[i].name.replace(/\.[^.]+$/,"");$("fm").textContent=T[i].name.split(".").pop().toUpperCase();list();art(T[i])}
+function setArt(u){const c=$("cover");c.style.backgroundImage=u?`url("${u}")`:"";c.classList.toggle("has",!!u);if("mediaSession"in navigator&&cur>=0)navigator.mediaSession.metadata=new MediaMetadata({title:T[cur].title||T[cur].name.replace(/\.[^.]+$/,""),artist:T[cur].artist||"",artwork:u?[{src:u}]:[]})}
+function art(t){$("ar").textContent=t.artist||"";if(t.title)$("t").textContent=t.title;setArt(t.art||null);if(t.read||!window.jsmediatags||!t.file)return;t.read=1;jsmediatags.read(t.file,{onSuccess:r=>{const k=r.tags,p=k.picture;if(p)t.art=URL.createObjectURL(new Blob([new Uint8Array(p.data)],{type:p.format}));t.artist=k.artist||"";t.title=k.title||"";if(T[cur]===t){setArt(t.art||null);$("ar").textContent=t.artist;if(t.title)$("t").textContent=t.title}},onError:()=>{}})}
+function next(d){if(!T.length)return;let i=sh?Math.floor(Math.random()*T.length):cur+d;if(i>=T.length)i=0;if(i<0)i=T.length-1;play(i)}
+function addF(fs){const was=T.length;fs.filter(f=>EX.test(f.name)).sort((p,q)=>p.name.localeCompare(q.name,"ko",{numeric:true})).forEach(f=>T.push({name:f.name,url:URL.createObjectURL(f),file:f}));list();if(!was&&T.length)play(0)}
+async function walk(h,o){for await(const [n,e] of h.entries()){if(e.kind=="file"){if(EX.test(n))o.push(await e.getFile())}else await walk(e,o)}}
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open("pl",1);r.onupgradeneeded=()=>r.result.createObjectStore("h");r.onsuccess=()=>res(r.result);r.onerror=rej});
+async function saveH(h){try{const d=await idb();d.transaction("h","readwrite").objectStore("h").put(h,"dir")}catch(e){}}
+async function loadH(){try{const d=await idb();return await new Promise(r=>{const q=d.transaction("h").objectStore("h").get("dir");q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+async function scan(h){try{if((await h.requestPermission({mode:"read"}))!="granted")return;$("cn").textContent="스캔 중...";const o=[];await walk(h,o);addF(o)}catch(e){$("cn").textContent="스캔 실패"}}
+$("ad").onclick=()=>$("fi").click();
+$("fi").onchange=e=>{addF([...e.target.files]);e.target.value=""};
+$("fd").onclick=async()=>{if(window.showDirectoryPicker){try{const h=await showDirectoryPicker();saveH(h);await scan(h)}catch(e){}}else $("fo").click()};
+$("fo").onchange=e=>{addF([...e.target.files]);e.target.value=""};
+loadH().then(h=>{if(h&&h.requestPermission){$("rf").hidden=false;$("rf").onclick=()=>scan(h)}});
+document.body.ondragover=e=>e.preventDefault();
+document.body.ondrop=e=>{e.preventDefault();addF([...e.dataTransfer.files])};
+$("pp").onclick=()=>{if(cur<0){if(T.length)play(0);return}init();ctx.resume();a.paused?a.play():a.pause()};
+$("pv").onclick=()=>{a.currentTime>3?a.currentTime=0:next(-1)};
+$("nx").onclick=()=>next(1);
+$("sh").onclick=()=>{sh=!sh;$("sh").classList.toggle("on",sh)};
+$("rp").onclick=()=>{rp=(rp+1)%3;$("rp").innerHTML=rp==2?I.r1:I.rp;$("rp").classList.toggle("on",rp>0)};
+a.onplay=()=>$("pp").innerHTML=I.pa;a.onpause=()=>$("pp").innerHTML=I.pl;
+a.onended=()=>{if(rp==2)play(cur);else if(rp==1||cur<T.length-1||sh)next(1)};
+a.onerror=()=>{if(cur>=0)$("t").textContent="재생할 수 없어요. 이 브라우저가 지원하지 않는 포맷이에요."};
+a.ontimeupdate=()=>{$("cu").textContent=tm(a.currentTime);$("du").textContent=tm(a.duration);if(a.duration)$("sk").value=a.currentTime/a.duration*1000};
+$("sk").oninput=()=>{if(a.duration)a.currentTime=$("sk").value/1000*a.duration};
+$("vo").oninput=()=>a.volume=$("vo").value;
+
+/* 파라메트릭 EQ */
+const bq=(t,f0,G,Q,f)=>{const A=10**(G/40),w0=2*Math.PI*f0/48000,c=Math.cos(w0),s=Math.sin(w0),w=2*Math.PI*f/48000,cw=Math.cos(w),c2=Math.cos(2*w);let b0,b1,b2,a0,a1,a2;
+if(t=="peaking"){const al=s/(2*Q);b0=1+al*A;b1=-2*c;b2=1-al*A;a0=1+al/A;a1=-2*c;a2=1-al/A}
+else{const al=s/2*Math.SQRT2,k=2*Math.sqrt(A)*al;if(t=="lowshelf"){b0=A*((A+1)-(A-1)*c+k);b1=2*A*((A-1)-(A+1)*c);b2=A*((A+1)-(A-1)*c-k);a0=(A+1)+(A-1)*c+k;a1=-2*((A-1)+(A+1)*c);a2=(A+1)+(A-1)*c-k}else{b0=A*((A+1)+(A-1)*c+k);b1=-2*A*((A-1)+(A+1)*c);b2=A*((A+1)+(A-1)*c-k);a0=(A+1)-(A-1)*c+k;a1=2*((A-1)-(A+1)*c);a2=(A+1)-(A-1)*c-k}}
+const n=b0*b0+b1*b1+b2*b2+2*(b0*b1+b1*b2)*cw+2*b0*b2*c2,d=a0*a0+a1*a1+a2*a2+2*(a0*a1+a1*a2)*cw+2*a0*a2*c2;return 10*Math.log10(n/d)};
+const PD=[["lowshelf",80],["peaking",200],["peaking",500],["peaking",1000],["peaking",2500],["peaking",5000],["peaking",8000],["highshelf",12000]];
+const pdef=()=>PD.map(([t,f])=>({t,f,g:0,q:1}));
+let PP={};try{PP=JSON.parse(localStorage.getItem("eqPP"))||{}}catch(e){}
+const spp=()=>{try{localStorage.setItem("eqPP",JSON.stringify(PP))}catch(e){}};
+function pchips(){const p=$("pps");p.innerHTML="";Object.keys(PP).forEach(k=>{const b=document.createElement("button");b.className="ch";b.dataset.k=k;b.textContent=k;b.onclick=()=>{P=JSON.parse(JSON.stringify(PP[k]));pshow()};const d=document.createElement("span");d.textContent="×";d.setAttribute("aria-label",k+" 삭제");d.style.cssText="margin-left:8px;padding:0 4px;opacity:.7";d.onclick=e=>{e.stopPropagation();delete PP[k];spp();pchips();pshow()};b.appendChild(d);p.appendChild(b)});const s=document.createElement("button");s.className="ch";s.textContent="+ 저장";s.onclick=()=>{$("sr").hidden=false;$("nm").focus()};p.appendChild(s)}
+P=pdef();try{const s=JSON.parse(localStorage.getItem("eqP"));if(Array.isArray(s)&&s.length==8)P=s}catch(e){}
+try{if(localStorage.getItem("eqm")=="p")md="p"}catch(e){}
+let sel=0,dr=-1;
+const f2v=f=>1000*Math.log(f/20)/Math.log(1000),v2f=v=>20*Math.pow(1000,v/1000);
+const ff=f=>f>=1000?(f/1000).toFixed(f>=10000?1:2).replace(/\.?0+$/,"")+"k":Math.round(f);
+const sg=v=>(v>0?"+":"")+v.toFixed(1)+" dB";
+const bx=f=>((Math.log(f/25)/Math.log(640))*14+.5)/15*W;
+function applyP(){pf.forEach((q,i)=>{const b=P[i];q.type=b.t;q.frequency.value=b.f;q.gain.value=md=="p"?b.g:0;q.Q.value=b.q})}
+function pshow(){const b=P[sel];$("pt").value=b.t;$("pf").value=f2v(b.f);$("pg").value=b.g;$("pq").value=b.q;$("pq").disabled=b.t!="peaking";$("pfv").textContent=ff(b.f)+"Hz";$("pgv").textContent=sg(b.g);$("pqv").textContent=b.q.toFixed(1);document.querySelectorAll("#pb .ch").forEach((c,i)=>c.classList.toggle("on",i==sel));$("eqh").textContent="밴드 "+(sel+1)+"  "+ff(b.f)+"Hz  "+sg(b.g);document.querySelectorAll("#pps .ch[data-k]").forEach(c=>c.classList.toggle("on",JSON.stringify(PP[c.dataset.k])==JSON.stringify(P)));applyP();try{localStorage.setItem("eqP",JSON.stringify(P))}catch(e){}}
+P.forEach((_,i)=>{const b=document.createElement("button");b.className="ch";b.textContent=i+1;b.onclick=()=>{sel=i;pshow()};$("pb").appendChild(b)});
+$("pt").onchange=()=>{P[sel].t=$("pt").value;pshow()};
+$("pf").oninput=()=>{P[sel].f=v2f(+$("pf").value);pshow()};
+$("pg").oninput=()=>{P[sel].g=+$("pg").value;pshow()};
+$("pq").oninput=()=>{P[sel].q=+$("pq").value;pshow()};
+$("pz").onclick=()=>{P=pdef();sel=0;pshow()};
+cv.onpointerdown=e=>{if(md!="p")return;const r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;let best=-1,bd=900;P.forEach((b,i)=>{const d=(bx(b.f)-px)**2+(yy(b.g)-py)**2;if(d<bd){bd=d;best=i}});if(best>=0){dr=sel=best;cv.setPointerCapture(e.pointerId);pshow()}};
+cv.onpointermove=e=>{if(dr<0)return;const r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top,b=P[dr];b.f=Math.max(20,Math.min(20000,fx(px)));b.g=Math.round(Math.max(-12,Math.min(12,(H/2-py)/(H/2-8)*12))*2)/2;pshow()};
+cv.onpointerup=cv.onpointercancel=()=>{dr=-1};
+function setM(m){md=m;try{localStorage.setItem("eqm",m)}catch(e){}document.querySelectorAll("#md .ch").forEach(c=>c.classList.toggle("on",c.dataset.m==m));const gm=m=="g";$("ps").hidden=!gm;if(!gm)$("sr").hidden=true;$("eq").hidden=!gm;$("lb").hidden=!gm;$("pm").hidden=gm;cv.style.touchAction=gm?"auto":"none";show();if(!gm)pshow();else applyP()}
+document.querySelectorAll("#md .ch").forEach(c=>c.onclick=()=>setM(c.dataset.m));
+pchips();setM(md);
+
+/* 3D 사운드 */
+let S3=null,SP={w:0,o:0,t:8,r:0};
+const SPP={"끄기":{w:0,o:0,t:8,r:0},"와이드":{w:.5,o:0,t:8,r:0},"시네마":{w:.6,o:0,t:8,r:.25},"콘서트홀":{w:.4,o:0,t:8,r:.6},"8D":{w:.2,o:1,t:8,r:.15}};
+try{const s=JSON.parse(localStorage.getItem("sp3d"));if(s&&typeof s.w=="number")SP={...SP,...s}}catch(e){}
+function build3d(inp){const G=v=>{const q=ctx.createGain();q.gain.value=v;return q},sp=ctx.createChannelSplitter(2),mg=ctx.createChannelMerger(2);
+const up=G(1);up.channelCount=2;up.channelCountMode="explicit";up.channelInterpretation="speakers";
+const mB=G(.5),sA=G(.5),sB=G(-.5),sW=G(1),sN=G(-1),dry=G(1),out=G(1),og=G(0),rg=G(0),gx=G(2.5),gz=G(-2.5);
+inp.connect(up);up.connect(sp);sp.connect(mB,0);sp.connect(mB,1);sp.connect(sA,0);sp.connect(sB,1);sA.connect(sW);sB.connect(sW);sW.connect(sN);
+mB.connect(mg,0,0);mB.connect(mg,0,1);sW.connect(mg,0,0);sN.connect(mg,0,1);
+mg.connect(dry);dry.connect(out);
+const pan=ctx.createPanner();pan.panningModel="HRTF";pan.distanceModel="inverse";pan.refDistance=1;mg.connect(pan);pan.connect(og);og.connect(out);
+const o1=ctx.createOscillator(),o2=ctx.createOscillator();
+o1.setPeriodicWave(ctx.createPeriodicWave(new Float32Array([0,0]),new Float32Array([0,1])));o2.setPeriodicWave(ctx.createPeriodicWave(new Float32Array([0,1]),new Float32Array([0,0])));
+o1.connect(gx);gx.connect(pan.positionX);o2.connect(gz);gz.connect(pan.positionZ);o1.start();o2.start();
+const cn=ctx.createConvolver(),len=Math.floor(ctx.sampleRate*2.2),ir=ctx.createBuffer(2,len,ctx.sampleRate);
+for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
+cn.buffer=ir;mg.connect(cn);cn.connect(rg);rg.connect(out);
+S3={w:sW,dry,og,rg,o1,o2};return out}
+function ap3(){if(!S3)return;S3.w.gain.value=1+SP.w*2;S3.dry.gain.value=1-SP.o;S3.og.gain.value=SP.o;S3.rg.gain.value=SP.r*.9;const f=1/SP.t;S3.o1.frequency.value=f;S3.o2.frequency.value=f}
+function s3ui(){$("s3w").value=SP.w*100;$("s3o").value=SP.o*100;$("s3t").value=SP.t;$("s3r").value=SP.r*100;$("s3wv").textContent=Math.round(SP.w*100)+"%";$("s3ov").textContent=Math.round(SP.o*100)+"%";$("s3tv").textContent=SP.t+"초";$("s3rv").textContent=Math.round(SP.r*100)+"%";
+let m="사용자 설정";document.querySelectorAll("#s3p .ch").forEach(c=>{const p=SPP[c.dataset.k],on=["w","o","t","r"].every(k=>Math.abs(p[k]-SP[k])<.005);c.classList.toggle("on",on);if(on)m=c.dataset.k});if(!SP.w&&!SP.o&&!SP.r)m="꺼짐";$("s3h").textContent=m;
+try{localStorage.setItem("sp3d",JSON.stringify(SP))}catch(e){}ap3()}
+Object.keys(SPP).forEach(k=>{const b=document.createElement("button");b.className="ch";b.dataset.k=k;b.textContent=k;b.onclick=()=>{SP={...SPP[k]};s3ui()};$("s3p").appendChild(b)});
+$("s3w").oninput=()=>{SP.w=+$("s3w").value/100;s3ui()};
+$("s3o").oninput=()=>{SP.o=+$("s3o").value/100;s3ui()};
+$("s3t").oninput=()=>{SP.t=+$("s3t").value;s3ui()};
+$("s3r").oninput=()=>{SP.r=+$("s3r").value/100;s3ui()};
+s3ui();
+list();
+</script>
+</body>
+</html>
